@@ -12,6 +12,7 @@ import com.example.podex_retrofit.R
 import com.example.podex_retrofit.adapter.PokemonAdapter
 import com.example.podex_retrofit.databinding.MainFragmentBinding
 import com.example.podex_retrofit.model.Pokemon
+import com.example.podex_retrofit.view.dailogs.FilterFragment
 import com.example.podex_retrofit.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -61,5 +62,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         })
 
+        binding.imageFilters.setOnClickListener { showBottomSheetDialog() }
+
+    }
+
+    fun showBottomSheetDialog(){
+        val bottomSheet = FilterFragment()
+        bottomSheet.show(parentFragmentManager, "dialog_filters")
     }
 }
