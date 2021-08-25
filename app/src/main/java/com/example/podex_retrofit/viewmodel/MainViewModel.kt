@@ -1,4 +1,5 @@
 package com.example.podex_retrofit.viewmodel
+
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,19 +18,30 @@ class MainViewModel : ViewModel() {
 
     fun fetchAllFromSerivce(context: Context) {
         val repository = PokemonRepository(context)
-        repository.getPokemons(){ pokemonResponse, error ->
-            pokemonResponse?.let {
+        repository.getPokemons() { response, error ->
+            response?.let {
                 _POKE.value = it.results
-                repository.insertIntoDataBase(it.results)
+                loadPokeDetails(it.results, repository)
             }
-
             error?.let {
                 _ERROR.value = it
             }
         }
     }
+    private fun loadPokeDetails(pokemons: List<Pokemon>, repository: PokemonRepository) {
+        pokemons.forEach { poke ->
+            repository.fetchPokemonDetails(pokeId = poke.extractIdFormUrl()) { details, _ ->
+                details?.let {
 
-    fun fetchAllFromDataBase(context: Context){
+                    poke.details = details
+                    repository.insertIntoDatabase(poke)
+
+                }
+            }
+        }
+    }
+
+    fun fetchAllFromDataBase(context: Context) {
         val listOf = PokemonRepository(context).fetchFromDataBase()
         if (listOf != null && listOf.isNotEmpty()) {
             _POKE.value = listOf!!
