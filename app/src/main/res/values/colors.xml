@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="cinza">#F2f2f2f2</color>
+
     <color name="bg_type_bug">#88d674</color>
     <color name="bg_type_fairy">#EBA8C3</color>
     <color name="bg_type_ghost">#8571BE</color>
@@ -20,7 +21,7 @@
     <color name="bg_type_dragon">#7383B9</color>
     <color name="bg_type_fire">#FFA756</color>
     <color name="bg_type_ground">#F78551</color>
-    <color name="bg_type_psychic">#FF6568</color>
+    <color name="bg_type_psychic">#f366b9</color>
     <color name="bg_type_eletric">#F2CB55</color>
     <color name="bg_type_flying">#83A2E3</color>
     <color name="bg_type_ice">#91D8DF</color>
@@ -40,7 +41,7 @@
     <color name="type_dragon">#0F6AC0</color>
     <color name="type_fire">#FD7D24</color>
     <color name="type_ground">#DD7748</color>
-    <color name="type_psychic">#EA5D60</color>
+    <color name="type_psychic">#f366b9</color>
     <color name="type_flying">#748FC9</color>
     <color name="type_ice">#61CEC0</color>
     <color name="type_rock">#BAAB82</color>

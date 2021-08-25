@@ -70,4 +70,9 @@ class PokemonRepository(private val context: Context) {
         val dao = dataBase.pokemonDAO()
         return dao.getAll()
     }
+
+    fun fetchAllFromDataBaseWithFilter(query: String): List<Pokemon>?{
+        val dao = dataBase.pokemonDAO()
+        return dao.fetchFiltered(query)
+    }
 }

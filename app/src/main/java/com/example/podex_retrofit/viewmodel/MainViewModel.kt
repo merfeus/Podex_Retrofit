@@ -49,4 +49,12 @@ class MainViewModel : ViewModel() {
             fetchAllFromSerivce(context)
         }
     }
+
+    fun fetchFilteredFromDataBase(context: Context, query: String){
+        val repository = PokemonRepository(context)
+        val filteredLister = repository.fetchAllFromDataBaseWithFilter(query)
+        filteredLister?.let {
+            _POKE.value = it //pegando o banco 
+        }
+    }
 }

@@ -67,7 +67,7 @@
             android:text="Search for Pokémon by name or using the National Pokédex number." />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/outlinedTextField"
+            android:id="@+id/editTextSearch"
             android:background="@color/cinza"
             app:boxCornerRadiusBottomEnd="10dp"
             app:boxCornerRadiusBottomStart="10dp"
@@ -82,7 +82,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
