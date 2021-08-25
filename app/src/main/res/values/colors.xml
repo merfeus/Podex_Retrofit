@@ -25,6 +25,7 @@
     <color name="bg_type_flying">#83A2E3</color>
     <color name="bg_type_ice">#91D8DF</color>
     <color name="bg_type_rock">#D4C294</color>
+    <color name="bg_type_steel">#417D9A</color>
 
     <color name="type_bug">#8CB230</color>
     <color name="type_fairy">#ED6EC7</color>
@@ -43,5 +44,6 @@
     <color name="type_flying">#748FC9</color>
     <color name="type_ice">#61CEC0</color>
     <color name="type_rock">#BAAB82</color>
+
 
 </resources>

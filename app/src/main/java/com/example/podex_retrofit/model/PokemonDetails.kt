@@ -104,6 +104,7 @@ data class PokemonType(
             "flying" -> PokeTypeSetup.FLYING
             "ice" -> PokeTypeSetup.ICE
             "rock" -> PokeTypeSetup.ROCK
+            "steel" -> PokeTypeSetup.STEEL
             else -> PokeTypeSetup.NORMAL
         }
     }
@@ -132,4 +133,5 @@ enum class PokeTypeSetup(
     FLYING(R.color.bg_type_flying, R.drawable.flying, R.color.type_flying),
     ICE(R.color.bg_type_ice, R.drawable.ice, R.color.type_ice),
     ROCK(R.color.bg_type_rock, R.drawable.rock, R.color.type_rock),
+    STEEL(R.color.bg_type_steel, R.drawable.steel, R.color.type_steel)
 }

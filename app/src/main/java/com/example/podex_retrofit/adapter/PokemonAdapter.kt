@@ -49,6 +49,7 @@ class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         pokemon.details?.let {
             Glide.with(itemView.context)
                 .load(it.sprites.other.artWork?.image)
+                .placeholder(R.drawable.ic_baseline_image_24)
                 .into(binding.imagePokemon)
 
             val pokeTypeSetup = it.types[0].type.extractPokeSetup()
