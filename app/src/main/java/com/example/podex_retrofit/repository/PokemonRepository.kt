@@ -4,10 +4,10 @@ import android.content.Context
 import com.example.podex_retrofit.database.AppDataBase
 import com.example.podex_retrofit.model.Pokemon
 import com.example.podex_retrofit.model.PokemonDetails
-import com.example.podex_retrofit.model.PokemonResponse
 import com.example.podex_retrofit.service.RetrofitBuilder
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class PokemonRepository(private val context: Context) {
@@ -15,50 +15,39 @@ class PokemonRepository(private val context: Context) {
     private val dataBase = AppDataBase.getDataBase(context)
     val service = RetrofitBuilder.getPokemonService()
 
-    fun getPokemons(onComplete: (PokemonResponse?, String?) -> Unit) {
-        val call = service.getAll()
-        call.enqueue(object : Callback<PokemonResponse> {
-            override fun onResponse(call: Call<PokemonResponse>, response: Response<PokemonResponse>) {
-                if (response.body() != null) {
-                    onComplete(response.body(), null)
-                } else {
-                    onComplete(null, "Nenhum pokemon encontrado")
+    suspend fun getPokemons(): List<Pokemon>? {
+        return withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+            val response = service.getAll()
+            val responsePokemon = processData(response)
+            responsePokemon?.results?.forEach {
+                fetchPokemonDetails(it.extractIdFormUrl())?.let { details ->
+                    it.details = details
                 }
             }
+            responsePokemon?.results
+        }
 
-            override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
-                onComplete(null, t.message)
-            }
-        })
     }
 
-    fun fetchPokemonDetails(pokeId: String, onComplete:(PokemonDetails?,String?) -> Unit){
-        val call = service.getDetials(pokeId)
-        call.enqueue(object : Callback<PokemonDetails>{
-
-            override fun onResponse(
-                call: Call<PokemonDetails>,
-                response: Response<PokemonDetails>
-            ) {
-                if (response.body() != null){
-                    onComplete(response.body(), null)
-                } else {
-                    onComplete(null, "Nenhum pokemon encontrado")
-                }
-            }
-
-            override fun onFailure(call: Call<PokemonDetails>, t: Throwable) {
-                onComplete(null, t.message)
-            }
-
-        })
+    private fun <T> processData(response: Response<T>): T? {
+        return if (response.isSuccessful) response.body() else null
     }
 
-    fun insertIntoDataBase(items: List<Pokemon>){
+
+    suspend fun fetchPokemonDetails(pokeId: String): PokemonDetails? {
+
+        return withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+            val response = service.getDetials(pokeId)
+            processData(response)
+        }
+    }
+
+
+    fun insertIntoDataBase(items: List<Pokemon>) {
         val dao = dataBase.pokemonDAO()
         items.forEach {
             dao.insert(pokemon = it)
-        }//nao esta sendo utilizada
+        }
     }
 
     fun insertIntoDatabase(pokemon: Pokemon) {
@@ -66,12 +55,12 @@ class PokemonRepository(private val context: Context) {
         dao.insert(pokemon = pokemon)
     }
 
-    fun fetchFromDataBase(): List<Pokemon>?{
+    fun fetchFromDataBase(): List<Pokemon>? {
         val dao = dataBase.pokemonDAO()
         return dao.getAll()
     }
 
-    fun fetchAllFromDataBaseWithFilter(query: String): List<Pokemon>?{
+    fun fetchAllFromDataBaseWithFilter(query: String): List<Pokemon>? {
         val dao = dataBase.pokemonDAO()
         return dao.fetchFiltered(query)
     }

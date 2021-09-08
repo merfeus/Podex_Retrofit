@@ -19,6 +19,8 @@ abstract class AppDataBase : RoomDatabase() {
 
     companion object {
 
+        //Singleton que irá gerar nossa classe AppDatabse com tudo implementado pelo Room.
+
         fun getDataBase(context: Context): AppDataBase {
             return Room.databaseBuilder(
                 context.applicationContext,
@@ -28,6 +30,7 @@ abstract class AppDataBase : RoomDatabase() {
                 .allowMainThreadQueries()
                 .build()
         }
+
     }
 
 }

@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.podex_retrofit.model.Pokemon
 import com.example.podex_retrofit.repository.PokemonRepository
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
@@ -15,46 +17,33 @@ class MainViewModel : ViewModel() {
     private val _ERROR = MutableLiveData<String>()
     val error: LiveData<String> = _ERROR
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
 
-    fun fetchAllFromSerivce(context: Context) {
+
+    fun fetchAllFromServer(context: Context) {
+
         val repository = PokemonRepository(context)
-        repository.getPokemons() { response, error ->
-            response?.let {
-                _POKE.value = it.results
-                loadPokeDetails(it.results, repository)
-            }
-            error?.let {
-                _ERROR.value = it
-            }
-        }
-    }
-    private fun loadPokeDetails(pokemons: List<Pokemon>, repository: PokemonRepository) {
-        pokemons.forEach { poke ->
-            repository.fetchPokemonDetails(pokeId = poke.extractIdFormUrl()) { details, _ ->
-                details?.let {
 
-                    poke.details = details
-                    repository.insertIntoDatabase(poke)
+        _isLoading.value = true
 
-                }
+        viewModelScope.launch {
+            repository.getPokemons()?.let { pokemons ->
+                _isLoading.value = false
+                _POKE.value = pokemons
             }
         }
     }
 
-    fun fetchAllFromDataBase(context: Context) {
+    fun fetchAllFromDatabase(context: Context) {
+
         val listOf = PokemonRepository(context).fetchFromDataBase()
+
         if (listOf != null && listOf.isNotEmpty()) {
             _POKE.value = listOf!!
         } else {
-            fetchAllFromSerivce(context)
+            fetchAllFromServer(context)
         }
-    }
 
-    fun fetchFilteredFromDataBase(context: Context, query: String){
-        val repository = PokemonRepository(context)
-        val filteredLister = repository.fetchAllFromDataBaseWithFilter(query)
-        filteredLister?.let {
-            _POKE.value = it //pegando o banco 
-        }
     }
 }

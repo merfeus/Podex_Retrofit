@@ -38,6 +38,9 @@ android {
 
 dependencies {
 
+    //Airbnb
+    implementation "com.airbnb.android:lottie:4.1.0"
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
