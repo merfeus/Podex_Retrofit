@@ -47,14 +47,18 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding = MainFragmentBinding.bind(view)
 
-        binding.recyclerVIewPoke.layoutManager = GridLayoutManager(requireContext(), 1)
-        binding.recyclerVIewPoke.adapter = adapter
+        startRecyclerView()
+        startObserver()
+        startViewModelFun()
+        startSettingsSearch()
+        startbottomSheet()
+    }
 
-        viewModel.error.observe(viewLifecycleOwner, observerError)
-        viewModel.poke.observe(viewLifecycleOwner, observerPoke)
-        viewModel.isLoading.observe(viewLifecycleOwner, observerLoading)
+    private fun startbottomSheet() {
+        binding.imageFilters.setOnClickListener { showBottomSheetDialog() }
+    }
 
-        viewModel.fetchAllFromServer()
+    private fun startSettingsSearch() {
 
         binding.editTextSearch.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -76,9 +80,23 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 }
             }
         })
+    }
 
-        binding.imageFilters.setOnClickListener { showBottomSheetDialog() }
+    private fun startViewModelFun() {
+        viewModel.fetchAllFromServer()
+    }
 
+    private fun startObserver() {
+
+        viewModel.error.observe(viewLifecycleOwner, observerError)
+        viewModel.poke.observe(viewLifecycleOwner, observerPoke)
+        viewModel.isLoading.observe(viewLifecycleOwner, observerLoading)
+    }
+
+    private fun startRecyclerView() {
+
+        binding.recyclerVIewPoke.layoutManager = GridLayoutManager(requireContext(), 1)
+        binding.recyclerVIewPoke.adapter = adapter
     }
 
     fun showBottomSheetDialog() {
