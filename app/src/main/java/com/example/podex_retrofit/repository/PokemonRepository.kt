@@ -1,19 +1,15 @@
 package com.example.podex_retrofit.repository
 
-import android.content.Context
-import com.example.podex_retrofit.database.AppDataBase
+import com.example.podex_retrofit.database.dao.PokemonDAO
 import com.example.podex_retrofit.model.Pokemon
 import com.example.podex_retrofit.model.PokemonDetails
-import com.example.podex_retrofit.service.RetrofitBuilder
+import com.example.podex_retrofit.service.PokemonService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-class PokemonRepository(private val context: Context) {
-
-    private val dataBase = AppDataBase.getDataBase(context)
-    val service = RetrofitBuilder.getPokemonService()
+class PokemonRepository(private val pokemonDAO: PokemonDAO, private val service: PokemonService) {
 
     suspend fun getPokemons(): List<Pokemon>? {
         return withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
@@ -42,26 +38,15 @@ class PokemonRepository(private val context: Context) {
         }
     }
 
-
-    fun insertIntoDataBase(items: List<Pokemon>) {
-        val dao = dataBase.pokemonDAO()
-        items.forEach {
-            dao.insert(pokemon = it)
-        }
-    }
-
     fun insertIntoDatabase(pokemon: Pokemon) {
-        val dao = dataBase.pokemonDAO()
-        dao.insert(pokemon = pokemon)
+        return pokemonDAO.insert(pokemon = pokemon)
     }
 
     fun fetchFromDataBase(): List<Pokemon>? {
-        val dao = dataBase.pokemonDAO()
-        return dao.getAll()
+        return pokemonDAO.getAll()
     }
 
     fun fetchAllFromDataBaseWithFilter(query: String): List<Pokemon>? {
-        val dao = dataBase.pokemonDAO()
-        return dao.fetchFiltered(query)
+        return pokemonDAO.fetchFiltered(query)
     }
 }

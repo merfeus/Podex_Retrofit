@@ -11,7 +11,9 @@ import com.example.podex_retrofit.adapter.TypesAdapter
 import com.example.podex_retrofit.databinding.FiltersFragmentBinding
 import com.example.podex_retrofit.viewmodel.FilterViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FilterFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FiltersFragmentBinding

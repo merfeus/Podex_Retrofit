@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface PokemonService {
 
 
-    @GET("/api/v2/pokemon?limit=1113")
+    @GET("/api/v2/pokemon?limit=50")
   suspend fun getAll(): Response<PokemonResponse>
 
     @GET("/api/v2/pokemon/{id}")

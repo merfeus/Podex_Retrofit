@@ -1,6 +1,8 @@
 package com.example.podex_retrofit.view
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.View.INVISIBLE
 import androidx.fragment.app.Fragment
@@ -14,7 +16,9 @@ import com.example.podex_retrofit.model.Pokemon
 import com.example.podex_retrofit.view.dailogs.FilterFragment
 import com.example.podex_retrofit.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainFragment : Fragment(R.layout.main_fragment) {
 
     private lateinit var binding: MainFragmentBinding
@@ -30,9 +34,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     }
 
     private val observerLoading = Observer<Boolean> { isLoading ->
-        if (isLoading){
+        if (isLoading) {
             binding.pokeAnimation.playAnimation()
-        } else{
+        } else {
             binding.pokeAnimation.cancelAnimation()
             binding.pokeAnimation.visibility = INVISIBLE
         }
@@ -50,26 +54,28 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         viewModel.poke.observe(viewLifecycleOwner, observerPoke)
         viewModel.isLoading.observe(viewLifecycleOwner, observerLoading)
 
-        viewModel.fetchAllFromServer(requireContext())
+        viewModel.fetchAllFromServer()
 
-//        binding.editTextSearch.editText?.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//            }
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                p0?.let {
-//                    if (it.length > 1){
-//                        viewModel.fetchFilteredFromDataBase(requireContext(), it.toString())
-//                    }else{
-//                        viewModel.fetchAllFromDataBase(requireContext())
-//                    }
-//                }
-//            }
-//
-//            override fun afterTextChanged(p0: Editable?) {
-//            }
-//
-//        })
+        binding.editTextSearch.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                p0?.let {
+                    if (it.length > 2) {
+                        viewModel.fetchFilteredFromDatabase(it.toString())
+                    }
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                p0?.let {
+                    if (it.isEmpty()) {
+                        viewModel.fetchAllFromDatabase()
+                    }
+                }
+            }
+        })
 
         binding.imageFilters.setOnClickListener { showBottomSheetDialog() }
 
